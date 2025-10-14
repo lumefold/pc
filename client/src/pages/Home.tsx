@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Desktop from "@/components/Desktop";
 import Taskbar from "@/components/Taskbar";
 import DesktopIcon from "@/components/DesktopIcon";
@@ -8,40 +8,87 @@ import ProjectsWindow from "@/components/ProjectsWindow";
 import AboutWindow from "@/components/AboutWindow";
 import FileExplorerWindow from "@/components/FileExplorerWindow";
 import TerminalWindow from "@/components/TerminalWindow";
+import SettingsWindow from "@/components/SettingsWindow";
 import ContextMenu from "@/components/ContextMenu";
 import NotificationCenter from "@/components/NotificationCenter";
 import QuickSettings from "@/components/QuickSettings";
 import LoadingScreen from "@/components/LoadingScreen";
-import { Folder, FileText, Heart, MessageSquare, Code, User, Bell, FolderOpen, Terminal } from "lucide-react";
+import VirtualDesktops from "@/components/VirtualDesktops";
+import WidgetsPanel from "@/components/WidgetsPanel";
+import AltTabSwitcher from "@/components/AltTabSwitcher";
+import SnapOverlay from "@/components/SnapOverlay";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useWindowStore } from "@/stores/windowStore";
+import { Folder, FileText, Heart, MessageSquare, Code, User, Bell, FolderOpen, Terminal, Settings } from "lucide-react";
 
-type WindowType = "portfolio" | "resume" | "projects" | "about" | "explorer" | "terminal" | null;
+type SnapPosition = 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'maximize' | null;
+
+const APP_CONFIGS = {
+  portfolio: { title: "Portfolio", icon: Folder, component: PortfolioWindow },
+  resume: { title: "Resume", icon: FileText, component: ResumeWindow },
+  projects: { title: "Projects", icon: Code, component: ProjectsWindow },
+  about: { title: "About", icon: User, component: AboutWindow },
+  explorer: { title: "File Explorer", icon: FolderOpen, component: FileExplorerWindow },
+  terminal: { title: "Terminal", icon: Terminal, component: TerminalWindow },
+  settings: { title: "Settings", icon: Settings, component: SettingsWindow },
+};
 
 export default function Home() {
-  const [openWindow, setOpenWindow] = useState<WindowType>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [quickSettingsOpen, setQuickSettingsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [virtualDesktopsOpen, setVirtualDesktopsOpen] = useState(false);
+  const [widgetsOpen, setWidgetsOpen] = useState(false);
+  const [altTabOpen, setAltTabOpen] = useState(false);
+  const [altTabIndex, setAltTabIndex] = useState(0);
+  const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [snapPreview, setSnapPreview] = useState<SnapPosition>(null);
+
+  const { windows, currentDesktopId, openWindow, closeWindow, focusWindow } = useWindowStore();
+  const activeWindows = windows.filter(w => w.desktopId === currentDesktopId && !w.isMinimized);
+
+  useKeyboardShortcuts({
+    onToggleStart: () => setStartMenuOpen(prev => !prev),
+    onToggleNotifications: () => setNotificationsOpen(prev => !prev),
+    onToggleWidgets: () => setWidgetsOpen(prev => !prev),
+    onToggleVirtualDesktops: () => setVirtualDesktopsOpen(prev => !prev),
+    onToggleAltTab: (direction) => {
+      const eligibleWindows = activeWindows.filter(w => !w.isMinimized);
+      if (eligibleWindows.length === 0) return;
+
+      const nextIndex = direction === 'backward'
+        ? (altTabIndex - 1 + eligibleWindows.length) % eligibleWindows.length
+        : (altTabIndex + 1) % eligibleWindows.length;
+
+      setAltTabIndex(nextIndex);
+      setAltTabOpen(true);
+
+      const handleKeyUp = (e: KeyboardEvent) => {
+        if (!e.altKey) {
+          setAltTabOpen(false);
+          const targetWindow = eligibleWindows[nextIndex];
+          if (targetWindow) {
+            focusWindow(targetWindow.id);
+          }
+          window.removeEventListener('keyup', handleKeyUp);
+        }
+      };
+      window.addEventListener('keyup', handleKeyUp);
+    },
+  });
 
   const handleAppClick = (appName: string) => {
-    switch (appName.toLowerCase()) {
-      case "portfolio":
-        setOpenWindow("portfolio");
-        break;
-      case "resume":
-        setOpenWindow("resume");
-        break;
-      case "projects":
-        setOpenWindow("projects");
-        break;
-      case "file explorer":
-        setOpenWindow("explorer");
-        break;
-      case "terminal":
-        setOpenWindow("terminal");
-        break;
-      default:
-        console.log(`Opening ${appName}`);
+    const appKey = appName.toLowerCase().replace(' ', '');
+    const config = APP_CONFIGS[appKey as keyof typeof APP_CONFIGS];
+    
+    if (config) {
+      openWindow(appKey, {
+        title: config.title,
+        icon: config.icon,
+      });
+    } else {
+      console.log(`Opening ${appName}`);
     }
   };
 
@@ -52,6 +99,19 @@ export default function Home() {
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     setContextMenu({ x: e.clientX, y: e.clientY });
+  };
+
+  const renderWindow = (window: typeof windows[0]) => {
+    const config = APP_CONFIGS[window.appId as keyof typeof APP_CONFIGS];
+    if (!config) return null;
+
+    const WindowComponent = config.component;
+    return (
+      <WindowComponent
+        key={window.id}
+        onClose={() => closeWindow(window.id)}
+      />
+    );
   };
 
   if (isLoading) {
@@ -83,17 +143,22 @@ export default function Home() {
           <DesktopIcon
             icon={User}
             label="About"
-            onDoubleClick={() => setOpenWindow("about")}
+            onDoubleClick={() => handleAppClick("about")}
           />
           <DesktopIcon
             icon={FolderOpen}
             label="File Explorer"
-            onDoubleClick={() => setOpenWindow("explorer")}
+            onDoubleClick={() => handleAppClick("explorer")}
           />
           <DesktopIcon
             icon={Terminal}
             label="Terminal"
-            onDoubleClick={() => setOpenWindow("terminal")}
+            onDoubleClick={() => handleAppClick("terminal")}
+          />
+          <DesktopIcon
+            icon={Settings}
+            label="Settings"
+            onDoubleClick={() => handleAppClick("settings")}
           />
           <DesktopIcon
             icon={Heart}
@@ -107,24 +172,7 @@ export default function Home() {
           />
         </div>
 
-        {openWindow === "portfolio" && (
-          <PortfolioWindow onClose={() => setOpenWindow(null)} />
-        )}
-        {openWindow === "resume" && (
-          <ResumeWindow onClose={() => setOpenWindow(null)} />
-        )}
-        {openWindow === "projects" && (
-          <ProjectsWindow onClose={() => setOpenWindow(null)} />
-        )}
-        {openWindow === "about" && (
-          <AboutWindow onClose={() => setOpenWindow(null)} />
-        )}
-        {openWindow === "explorer" && (
-          <FileExplorerWindow onClose={() => setOpenWindow(null)} />
-        )}
-        {openWindow === "terminal" && (
-          <TerminalWindow onClose={() => setOpenWindow(null)} />
-        )}
+        {activeWindows.map(renderWindow)}
 
         {contextMenu && (
           <ContextMenu
@@ -154,6 +202,23 @@ export default function Home() {
           isOpen={quickSettingsOpen}
           onClose={() => setQuickSettingsOpen(false)}
         />
+
+        <VirtualDesktops
+          isOpen={virtualDesktopsOpen}
+          onClose={() => setVirtualDesktopsOpen(false)}
+        />
+
+        <WidgetsPanel
+          isOpen={widgetsOpen}
+          onClose={() => setWidgetsOpen(false)}
+        />
+
+        <AltTabSwitcher
+          isOpen={altTabOpen}
+          selectedIndex={altTabIndex}
+        />
+
+        <SnapOverlay position={snapPreview} />
       </div>
 
       <Taskbar 

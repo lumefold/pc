@@ -1,0 +1,159 @@
+You are an expert front-end engineer + UI designer AI. Your task is to design and implement a **fully functional, interactive, Windows 11–inspired user interface** inside a Replit project. The final deliverable must be a working web app that runs in Replit (npm install / npm run dev) and demonstrates the UI plus interactive behaviors. Do not attempt to implement low-level OS features — simulate them in-browser.
+
+GENERAL GOALS
+- Recreate the core Windows 11 UX & interactions: centered taskbar, Start menu, Widgets panel, Virtual Desktops, Snap Layout overlays, Notification Center (Action Center), and System Settings app.
+- Blend the clean, minimal aesthetic and intuitive navigation style of https://www.vovacodes.ca/ (airy spacing, muted accent gradients, minimal typography).
+- Visual style: modern, sleek, minimalistic; fluent animations; consistent rounded corners (approx 10–14px); soft blur/acrylic backgrounds; subtle shadows; a neutral/muted palette with 1–2 accent colors.
+- Output a complete Replit-ready project (React-based) with clear file structure, README, and run instructions.
+
+TECH STACK (required)
+- React (functional components + hooks) — create the project using Vite + React or a React template that runs on Replit.
+- Styling: Tailwind CSS for utilities. Include a small global CSS file for glass/blur effects and variables.
+- Animation: framer-motion for fluid micro-interactions.
+- State management: Zustand (or React context) for session state (open windows, desktops, pinned apps).
+- Drag & drop / resize: react-rnd or react-draggable + custom resize handlers.
+- Persistence: localStorage to persist pinned apps, theme, and desktop layouts.
+- Testing: include basic Playwright e2e test stubs or Cypress/Testing Library smoke tests (optional but include instructions).
+- Accessibility: semantic HTML, ARIA attributes, focus management.
+
+PROJECT & UI REQUIREMENTS
+1. Project scaffold
+   - Provide package.json scripts: dev, build, start, lint, test.
+   - Include README.md with instructions to run on Replit and locally.
+
+2. Global layout
+   - A desktop canvas area that holds windows and background wallpaper. Desktop shows icons and optionally a centered “search” widget.
+   - Centered taskbar at the bottom with:
+     - Centered pinned icons area (icons for Start, Search, Edge-like browser, File Explorer, Widgets, Store, and a few sample apps).
+     - Right-side system tray with clock/date, quick settings toggle (wifi/volume), and a dot indicator for notifications.
+     - Taskbar must support hover reveal (e.g., overflow app tray on small screens) and drag-to-pin behavior (dragging an icon to the taskbar pins it).
+
+3. Start menu
+   - Opens from centered Start button or Win key.
+   - Layout: top search box, grid of pinned apps (editable via drag to reorder), recommended/recent area below, and quick actions (power, settings).
+   - Keyboard accessible: Up/Down/Enter navigates, Esc closes, Win key toggles.
+   - Support "right-click" context menus on pinned icons (Unpin, App settings).
+
+4. Widgets pane
+   - Slide-in panel from the left or right (configurable) containing:
+     - Weather, News, Quick Notes, Calendar stub widgets.
+     - Widgets are small components that can be rearranged (drag to reorder) and toggled on/off.
+   - On mobile, widgets collapse into a swipeable area or an overlay.
+
+5. Virtual desktops
+   - UI to create/delete/switch between virtual desktops (Win+Tab behavior simplified).
+   - Display thumbnails of desktops; dragging an open window onto a thumbnail moves it to that desktop.
+   - Persist desktops and their windows in localStorage.
+
+6. Snap layouts & window management
+   - When dragging a window to the top/left/right/ corner, show a translucent overlay with snap targets (half, quarter, grid).
+   - Dropping into a target snaps/tiles the window; support snapping two/three windows.
+   - Windows support:
+     - Title bar with app icon, title, draggable area.
+     - Controls: minimize, maximize/restore, close.
+     - Drag to move (constrained to desktop), resize (grab handles), z-index focus on click.
+     - Double-click title toggles maximize/restore.
+     - Context menu on title for Move, Size, Always on Top toggle.
+   - Right-click desktop to show context menu: New folder (stub), Refresh, Display settings (opens Settings).
+
+7. Notifications center (Action Center)
+   - Toast notifications appear top-right (or above system tray) with auto-dismiss and persistent Notification Center to view history.
+   - Quick toggles (Wi-Fi, Bluetooth, Focus Assist) live in the quick settings overlay.
+
+8. System Settings
+   - A multi-page settings app with left-side nav and content pane.
+   - At minimum include pages: Personalization (theme, wallpaper), System (display scaling, sound volume slider), Notifications (toggle), About (app info).
+   - Allow changing theme: Light / Dark / Auto and accent color selection. Theme changes should animate and persist.
+
+9. Apps ecosystem (sample apps)
+   - Provide 3–4 sample "apps" that open as windows: simple Browser mock (shows a website iframe or simulated content), File Explorer mock (tree + file list), Notes app (editable), Settings (as described).
+   - Apps should be modular components that can be opened/closed/pinned.
+
+10. Aesthetic & design tokens
+    - Border radius: 12px for panels, 10px for controls.
+    - Shadows: subtle, soft with low opacity.
+    - Blur: background acrylic (backdrop-filter blur + semi-transparent background).
+    - Typography: system UI stack (Segoe UI, Inter, Roboto, -apple-system, "Helvetica Neue", Arial, sans-serif). Use variable font where available; size scale consistent (h1-h6, body).
+    - Spacing & grid: generous whitespace like vovacodes.ca — comfortable margins and airy cards.
+
+11. Responsive behavior
+    - Desktop (>=1280px): full Windows-like behavior.
+    - Tablet (~768–1279px): taskbar icons can collapse, Start menu becomes centered modal; widgets become bottom sheet.
+    - Mobile (<768px): taskbar collapses to a compact dock; windows open as full-screen overlays or modals; gestures (swipe from edge) reveal widgets and notifications.
+    - Provide CSS breakpoints in Tailwind config and ensure layout gracefully adapts (reflow, collapsed menus).
+
+12. Keyboard & accessibility
+    - Global keyboard shortcuts:
+      - Win or Ctrl+Esc: toggle Start
+      - Win + A: open Notification Center
+      - Win + W: open Widgets
+      - Win + Tab: open Virtual Desktops UI
+      - Alt + Tab: quick app switcher overlay (simulate last-used)
+      - Win + Arrow keys: snap focused window to left/right/top/bottom
+      - Ctrl/Cmd + +/-: zoom in/out (simulate display scaling)
+    - Focus management: logical tab order, visible focus outlines, skip links where appropriate.
+    - ARIA: roles for dialogs, menus, toolbars; announcements for open/close events.
+
+13. Performance & production concerns
+    - Lazy-load non-critical components (widgets, settings) via React.lazy.
+    - Optimize images with srcsets and next-gen formats where possible.
+    - Keep bundle size reasonable; avoid heavy libraries beyond framer-motion and react-rnd.
+
+14. Persistence & config
+    - Save user config (theme, accent color, pinned apps, desktop layout) to localStorage with a version key.
+    - Provide an export/import JSON for settings so users can move their configuration.
+
+15. Dev workflow & deliverables
+    - Provide a clear file structure in the repo (components, hooks, stores, styles, assets).
+    - Include a README with:
+      - project overview
+      - run instructions for Replit and locally
+      - list of implemented features and keyboard shortcuts
+      - known limitations (no real OS file access, no privileged stuff)
+      - instructions to reset localStorage and switch desktops
+    - Include a small test plan or Playwright script skeleton for:
+      - opening Start menu, launching an app, snapping window left/right, switching desktops, receiving a notification.
+    - Provide a `THEMING.md` describing how accent colors / radius / shadows are controlled.
+
+16. Visual parity to vovacodes.ca
+    - Use an overall clean layout: abundant negative space, restrained color schemes, subtle gradient accent(s), minimal icons, and clear, readable typography.
+    - Recreate its feel by:
+      - Using a muted primary accent color (one accent) and neutral greys.
+      - Large hero-like empty desktop with minimal widget cards that echo vovacodes’ spacing and breathing room.
+      - Smooth micro-interactions and hover transitions consistent with that aesthetic.
+
+17. Implementation guidance (practical specifics for AI to output code)
+    - Scaffold: Vite + React + Tailwind starter.
+    - Example components to generate: DesktopCanvas, Taskbar, StartMenu, WidgetsPanel, VirtualDesktopManager, Window (DraggableWindow), SnapOverlay, NotificationCenter, SettingsApp, AppLauncher.
+    - Provide a `useWindowManager` Zustand store with methods: openWindow(id, props), closeWindow(id), focusWindow(id), minimizeWindow(id), maximizeRestore(id), moveWindow(id, x,y), resizeWindow(id,w,h), snapWindow(id, position), moveWindowToDesktop(id, desktopId).
+    - Provide keyboard handler at app root to map keys to actions.
+    - Provide CSS variables in `:root` for theme tokens (--bg, --card, --accent, --text, --radius, --glass-opacity).
+    - Provide examples of motion variants for framer-motion (enter/exit, hover, snapPreview).
+    - Provide sample icons (SVG) in /public/icons and optimize them.
+
+18. Edge cases & constraints to report
+    - Do not attempt to implement OS-level file or process management; simulate file explorer and apps within the web sandbox.
+    - Do not attempt to access hardware APIs without permission.
+    - Call out anything that cannot be replicated in-browser in clone_report / README.
+
+19. Acceptance criteria (what constitutes “done”)
+    - `npm install && npm run dev` runs with no errors in Replit.
+    - User can open Start, launch ≥3 sample apps, drag/resize windows, snap windows, create/switch virtual desktops, open Widgets and Notification Center, change theme, and persist config.
+    - Keyboard shortcuts work as specified.
+    - Visual style matches the specified rounded, modern, minimal aesthetic with fluent animations.
+    - README, THEMING.md, and a simple test plan included.
+
+20. Delivery format
+    - Produce a Git repo structure in the Replit environment (or a zip) with all code and assets.
+    - Include clear commit messages for major implementation steps (scaffold, taskbar, windows, snapping, widgets, settings).
+    - Provide a short developer notes file `clone_report.md` summarizing implemented features, approximations, and next steps.
+
+21. Safety & legal note for generator
+    - This UI is **inspired by** Windows 11 but must not use Microsoft trademarks in app names or claim to be Windows. Use neutral names (e.g., "WinUI-like", "Desktop UI", or "Modern Desktop"). Do not embed any proprietary assets (fonts or icons) without proper licensing — use system font stacks, open-source icons, and attribute any external assets.
+
+FINAL INSTRUCTIONS (how to respond in Replit)
+- When you start, return a short plan listing the initial files you will create and the order of implementation.
+- Produce code in small commits (scaffold → core layout → window manager → taskbar → start menu → widgets → snapping → settings → polish).
+- After implementing, run a smoke walkthrough and provide a brief QA report listing what works and any known bugs.
+
+Begin now: scaffold the project and return the first commit contents (package.json, vite config, src/main.jsx, src/App.jsx, tailwind config, README stub). Then continue implementing features iteratively until all acceptance criteria are met.
