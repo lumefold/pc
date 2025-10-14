@@ -6,6 +6,7 @@ import StartMenu from "./StartMenu";
 
 interface TaskbarProps {
   onAppClick?: (appName: string) => void;
+  onQuickSettingsClick?: () => void;
 }
 
 const taskbarApps = [
@@ -17,7 +18,7 @@ const taskbarApps = [
   { icon: Trash2, label: "Recycle Bin" },
 ];
 
-export default function Taskbar({ onAppClick }: TaskbarProps) {
+export default function Taskbar({ onAppClick, onQuickSettingsClick }: TaskbarProps) {
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [activeApp, setActiveApp] = useState<string | null>(null);
 
@@ -61,7 +62,7 @@ export default function Taskbar({ onAppClick }: TaskbarProps) {
             ))}
           </div>
 
-          <SystemTray />
+          <SystemTray onQuickSettingsClick={onQuickSettingsClick} />
         </div>
       </div>
 

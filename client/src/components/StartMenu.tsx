@@ -34,7 +34,7 @@ export default function StartMenu({ isOpen, onClose }: StartMenuProps) {
         data-testid="start-menu-backdrop"
       />
       <div 
-        className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[640px] bg-card/70 backdrop-blur-3xl border border-card-border rounded-lg shadow-2xl z-50 p-6"
+        className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[640px] bg-card/70 backdrop-blur-3xl border border-card-border rounded-lg shadow-2xl z-50 p-6 animate-slide-up"
         data-testid="start-menu"
       >
         <div className="mb-4">

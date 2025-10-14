@@ -1,7 +1,11 @@
 import { Wifi, Volume2, Battery } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export default function SystemTray() {
+interface SystemTrayProps {
+  onQuickSettingsClick?: () => void;
+}
+
+export default function SystemTray({ onQuickSettingsClick }: SystemTrayProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -26,14 +30,14 @@ export default function SystemTray() {
   };
 
   return (
-    <div className="flex items-center gap-2 h-full px-2" data-testid="system-tray">
-      <button className="h-8 px-2 rounded-md hover-elevate flex items-center gap-1.5" data-testid="button-network">
+    <div className="flex items-center gap-1 h-full px-2" data-testid="system-tray">
+      <button 
+        className="h-8 px-2 rounded-md hover-elevate flex items-center gap-1.5" 
+        onClick={onQuickSettingsClick}
+        data-testid="button-quick-settings"
+      >
         <Wifi className="h-3.5 w-3.5" />
-      </button>
-      <button className="h-8 px-2 rounded-md hover-elevate flex items-center gap-1.5" data-testid="button-volume">
         <Volume2 className="h-3.5 w-3.5" />
-      </button>
-      <button className="h-8 px-2 rounded-md hover-elevate flex items-center gap-1.5" data-testid="button-battery">
         <Battery className="h-3.5 w-3.5" />
       </button>
       <button className="h-8 px-3 rounded-md hover-elevate flex flex-col items-end justify-center" data-testid="button-datetime">

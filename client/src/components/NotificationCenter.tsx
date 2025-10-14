@@ -37,7 +37,7 @@ export default function NotificationCenter({ isOpen, onClose }: NotificationCent
         data-testid="notification-backdrop"
       />
       <div 
-        className="fixed bottom-20 right-4 w-96 bg-card/70 backdrop-blur-3xl border border-card-border rounded-lg shadow-2xl z-50"
+        className="fixed bottom-20 right-4 w-96 bg-card/70 backdrop-blur-3xl border border-card-border rounded-lg shadow-2xl z-50 animate-slide-up"
         data-testid="notification-center"
       >
         <div className="p-4 border-b border-border flex items-center justify-between">

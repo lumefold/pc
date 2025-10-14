@@ -43,7 +43,7 @@ export default function ContextMenu({ x, y, onClose }: ContextMenuProps) {
   return (
     <div
       ref={menuRef}
-      className="fixed z-50 min-w-[200px] bg-popover/70 backdrop-blur-2xl border border-popover-border rounded-md shadow-xl py-1"
+      className="fixed z-50 min-w-[200px] bg-popover/70 backdrop-blur-2xl border border-popover-border rounded-md shadow-xl py-1 animate-slide-up"
       style={{ left: x, top: y }}
       data-testid="context-menu"
     >

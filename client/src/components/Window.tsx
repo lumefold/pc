@@ -43,7 +43,7 @@ export default function Window({
 
   return (
     <div
-      className="absolute bg-card/70 backdrop-blur-2xl border border-card-border rounded-md shadow-2xl overflow-hidden"
+      className="absolute bg-card/70 backdrop-blur-2xl border border-card-border rounded-md shadow-2xl overflow-hidden animate-window-open"
       style={windowStyle}
       data-testid="window"
     >

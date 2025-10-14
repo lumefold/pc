@@ -6,16 +6,22 @@ import PortfolioWindow from "@/components/PortfolioWindow";
 import ResumeWindow from "@/components/ResumeWindow";
 import ProjectsWindow from "@/components/ProjectsWindow";
 import AboutWindow from "@/components/AboutWindow";
+import FileExplorerWindow from "@/components/FileExplorerWindow";
+import TerminalWindow from "@/components/TerminalWindow";
 import ContextMenu from "@/components/ContextMenu";
 import NotificationCenter from "@/components/NotificationCenter";
-import { Folder, FileText, Heart, MessageSquare, Code, User, Bell } from "lucide-react";
+import QuickSettings from "@/components/QuickSettings";
+import LoadingScreen from "@/components/LoadingScreen";
+import { Folder, FileText, Heart, MessageSquare, Code, User, Bell, FolderOpen, Terminal } from "lucide-react";
 
-type WindowType = "portfolio" | "resume" | "projects" | "about" | null;
+type WindowType = "portfolio" | "resume" | "projects" | "about" | "explorer" | "terminal" | null;
 
 export default function Home() {
   const [openWindow, setOpenWindow] = useState<WindowType>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [quickSettingsOpen, setQuickSettingsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleAppClick = (appName: string) => {
     switch (appName.toLowerCase()) {
@@ -27,6 +33,12 @@ export default function Home() {
         break;
       case "projects":
         setOpenWindow("projects");
+        break;
+      case "file explorer":
+        setOpenWindow("explorer");
+        break;
+      case "terminal":
+        setOpenWindow("terminal");
         break;
       default:
         console.log(`Opening ${appName}`);
@@ -41,6 +53,10 @@ export default function Home() {
     e.preventDefault();
     setContextMenu({ x: e.clientX, y: e.clientY });
   };
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={() => setIsLoading(false)} />;
+  }
 
   return (
     <Desktop>
@@ -70,6 +86,16 @@ export default function Home() {
             onDoubleClick={() => setOpenWindow("about")}
           />
           <DesktopIcon
+            icon={FolderOpen}
+            label="File Explorer"
+            onDoubleClick={() => setOpenWindow("explorer")}
+          />
+          <DesktopIcon
+            icon={Terminal}
+            label="Terminal"
+            onDoubleClick={() => setOpenWindow("terminal")}
+          />
+          <DesktopIcon
             icon={Heart}
             label="Likes"
             onDoubleClick={() => console.log("Opening Likes")}
@@ -92,6 +118,12 @@ export default function Home() {
         )}
         {openWindow === "about" && (
           <AboutWindow onClose={() => setOpenWindow(null)} />
+        )}
+        {openWindow === "explorer" && (
+          <FileExplorerWindow onClose={() => setOpenWindow(null)} />
+        )}
+        {openWindow === "terminal" && (
+          <TerminalWindow onClose={() => setOpenWindow(null)} />
         )}
 
         {contextMenu && (
@@ -117,9 +149,17 @@ export default function Home() {
           isOpen={notificationsOpen} 
           onClose={() => setNotificationsOpen(false)} 
         />
+
+        <QuickSettings
+          isOpen={quickSettingsOpen}
+          onClose={() => setQuickSettingsOpen(false)}
+        />
       </div>
 
-      <Taskbar onAppClick={handleAppClick} />
+      <Taskbar 
+        onAppClick={handleAppClick}
+        onQuickSettingsClick={() => setQuickSettingsOpen(!quickSettingsOpen)}
+      />
     </Desktop>
   );
 }
