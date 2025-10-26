@@ -35,6 +35,25 @@ A pixel-perfect recreation of the Windows 11 user interface built as an interact
 
 ## 🚀 Quick Start
 
+### Deployment on Vercel
+
+This project is configured for easy deployment on Vercel:
+
+1. **Build the application**
+```bash
+npm run build
+```
+
+2. **Deploy to Vercel**
+- Connect your GitHub repository to Vercel
+- Set `NODE_ENV=production` in Vercel environment variables
+- Vercel will automatically run `npm run build` and serve `dist/index.js`
+
+3. **Production Features**
+- Optimized static assets served from `dist/public/`
+- Server-side rendering with Express.js
+- Automatic HTTPS and CDN distribution
+
 ### Running on Replit
 
 This project is designed to run seamlessly on Replit:
