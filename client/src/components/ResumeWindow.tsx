@@ -17,12 +17,12 @@ export default function ResumeWindow({ onClose }: ResumeWindowProps) {
       <div className="p-6 max-w-4xl mx-auto">
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Vova</h1>
+            <h1 className="text-3xl font-bold mb-2">Abdyu</h1>
             <p className="text-lg text-muted-foreground mb-3">Full-Stack Developer</p>
             <div className="flex items-center gap-4 text-sm">
-              <a href="mailto:vova@example.com" className="flex items-center gap-1.5 text-primary hover-elevate px-2 py-1 rounded-md" data-testid="link-email">
+              <a href="mailto:hello@lumefold.com" className="flex items-center gap-1.5 text-primary hover-elevate px-2 py-1 rounded-md" data-testid="link-email">
                 <Mail className="h-4 w-4" />
-                vova@example.com
+                hello@lumefold.com
               </a>
               <a href="#" className="flex items-center gap-1.5 text-primary hover-elevate px-2 py-1 rounded-md" data-testid="link-linkedin">
                 <Linkedin className="h-4 w-4" />
