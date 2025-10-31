@@ -12,7 +12,7 @@ const initialOutput = [
   "",
   "Try the new cross-platform PowerShell https://aka.ms/pscore6",
   "",
-  "PS C:\\Users\\Vova> ",
+  "PS C:\\Users\\Abdyu> ",
 ];
 
 export default function TerminalWindow({ onClose }: TerminalWindowProps) {
@@ -25,7 +25,7 @@ export default function TerminalWindow({ onClose }: TerminalWindowProps) {
   }, [output]);
 
   const handleCommand = (cmd: string) => {
-    const newOutput = [...output, `PS C:\\Users\\Vova> ${cmd}`];
+    const newOutput = [...output, `PS C:\\Users\\Abdyu> ${cmd}`];
     
     const trimmedCmd = cmd.trim().toLowerCase();
     
@@ -41,11 +41,11 @@ export default function TerminalWindow({ onClose }: TerminalWindowProps) {
         ""
       );
     } else if (trimmedCmd === "clear") {
-      setOutput(["PS C:\\Users\\Vova> "]);
+      setOutput(["PS C:\\Users\\Abdyu> "]);
       setInput("");
       return;
     } else if (trimmedCmd === "whoami") {
-      newOutput.push("Vova - Full-Stack Developer", "");
+      newOutput.push("Abdyu - Full-Stack Developer", "");
     } else if (trimmedCmd === "date") {
       newOutput.push(new Date().toLocaleString(), "");
     } else if (trimmedCmd.startsWith("echo ")) {
@@ -56,7 +56,7 @@ export default function TerminalWindow({ onClose }: TerminalWindowProps) {
       newOutput.push(`'${cmd}' is not recognized as a command. Type 'help' for available commands.`, "");
     }
     
-    newOutput.push("PS C:\\Users\\Vova> ");
+    newOutput.push("PS C:\\Users\\Abdyu> ");
     setOutput(newOutput);
     setInput("");
   };
