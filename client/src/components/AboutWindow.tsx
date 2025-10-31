@@ -20,7 +20,7 @@ export default function AboutWindow({ onClose }: AboutWindowProps) {
           <div className="h-24 w-24 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center mb-4">
             <User className="h-12 w-12 text-white" />
           </div>
-          <h1 className="text-2xl font-bold mb-1">Vova</h1>
+          <h1 className="text-2xl font-bold mb-1">Abdyu</h1>
           <p className="text-muted-foreground mb-4">Full-Stack Developer & Creative Coder</p>
           
           <div className="flex gap-3">
@@ -61,7 +61,7 @@ export default function AboutWindow({ onClose }: AboutWindowProps) {
             <GraduationCap className="h-5 w-5 text-primary mt-0.5" />
             <div>
               <p className="font-semibold mb-1">Education</p>
-              <p className="text-sm text-muted-foreground">Bachelor of Science in Computer Science</p>
+              <p className="text-sm text-muted-foreground">Bachelor of Science in Software enginner</p>
             </div>
           </div>
 
@@ -78,7 +78,7 @@ export default function AboutWindow({ onClose }: AboutWindowProps) {
             <div>
               <p className="font-semibold mb-1">Contact</p>
               <a href="mailto:vova@example.com" className="text-sm text-primary hover:underline">
-                vova@example.com
+                malt:hello@lumefold.com
               </a>
             </div>
           </div>
