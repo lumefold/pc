@@ -78,7 +78,7 @@ export default function AboutWindow({ onClose }: AboutWindowProps) {
             <div>
               <p className="font-semibold mb-1">Contact</p>
               <a href="mailto:vova@example.com" className="text-sm text-primary hover:underline">
-                malt:hello@lumefold.com
+                hello@lumefold.com
               </a>
             </div>
           </div>
