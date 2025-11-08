@@ -1,15 +1,19 @@
 {
-  "version": 2,
+  // IMPORTANT: Set the "Root Directory" to "client" in your Vercel project settings.
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/node"
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "npm run build",
+        // The output directory is relative to the Root Directory ("client")
+        "outputDirectory": "../dist/public"
+      }
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/home", "permanent": true }
   ]
 }
